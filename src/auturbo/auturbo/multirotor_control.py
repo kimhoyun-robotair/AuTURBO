@@ -1,6 +1,3 @@
-###############################################################
-# WGS84 좌표 기반으로 장거리 멀티로터 자율비행 (~5km)을 구현하는 코드 #
-###############################################################
 import rclpy
 import numpy as np
 import math
@@ -11,7 +8,6 @@ from px4_msgs.msg import OffboardControlMode, VehicleCommand, VehicleStatus
 from px4_msgs.msg import TrajectorySetpoint, VehicleAttitudeSetpoint
 from px4_msgs.msg import VehicleLocalPosition, VehicleAttitude, VehicleGlobalPosition
 
-# from tf_transformations import euler_from_quaternion, quaternion_from_euler
 
 EARTH_RADIUS = 6371000.0  # 지구 반경 (미터)
 
@@ -69,8 +65,6 @@ class OffboardControl(Node):
         self.vehicle_global_position_subscriber = self.create_subscription(
             VehicleGlobalPosition, topic_vehicle_global_position, self.vehicle_global_position_callback, qos_profile)
 
-
-        # WGS84에서 NED로 변환된 Local 경로점들
         self.ned_waypoints = {
             "WP0": {"x":0, "y":0, "z": 0},
             "WP1": {"x":0, "y":0, "z": -20},

@@ -1,0 +1,6 @@
+[submodule "src/cartographer"]
+	path = src/cartographer
+	url = https://github.com/cartographer-project/cartographer.git
+[submodule "src/cartographer_ros"]
+	path = src/cartographer_ros
+	url = https://github.com/ros2/cartographer_ros.git
