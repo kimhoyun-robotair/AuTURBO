@@ -241,6 +241,13 @@ def generate_launch_description():
                     {'node_names': lifecycle_nodes}],
     )
 
+    navigate_node = Node(
+        package="simple_rover",
+        executable="navigatetopose",
+        name="navigatetopose",
+        output="screen",
+    )
+
     launchDescriptionObject = LaunchDescription()
 
     launchDescriptionObject.add_action(declare_autostart_cmd)

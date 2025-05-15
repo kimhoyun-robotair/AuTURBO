@@ -41,8 +41,8 @@ amcl:
 
     # Initial Pose 설정
     set_initial_pose: True
-    initial_pose.x: 0.2
-    initial_pose.y: 0.45
+    initial_pose.x: 0.0
+    initial_pose.y: 0.0
     initial_pose.z: 0.0
     initial_pose.yaw: 0.0
 
