@@ -14,6 +14,8 @@ install(DIRECTORY
   urdf
   worlds
   config
+  map
+  rviz
   DESTINATION share/${PROJECT_NAME}
 )
 

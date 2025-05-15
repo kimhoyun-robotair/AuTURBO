@@ -16,6 +16,14 @@ def generate_launch_description():
     gazebo_models_path, ignore_last_dir = os.path.split(pkg_simple_rover)
     os.environ["GZ_SIM_RESOURCE_PATH"] += os.pathsep + gazebo_models_path
 
+    # cartographer setting file 1
+    cartographer_config_dir = LaunchConfiguration('cartographer_config_dir',
+                                                default=os.path.join(pkg_simple_rover , 'config'))
+    # cartographer setting file 2
+    configuration_basename = LaunchConfiguration('configuration_basename', default='cartographer.lua')
+    resolution = LaunchConfiguration('resolution', default='0.05')
+    publish_period_sec = LaunchConfiguration('publish_period_sec', default='0.5')
+
     """
     rviz_launch_arg = DeclareLaunchArgument(
         'rviz', default_value='true',
@@ -39,12 +47,12 @@ def generate_launch_description():
     )
 
     x_arg = DeclareLaunchArgument(
-        'x', default_value='0.0',
+        'x', default_value='0.2',
         description='x coordinate of spawned robot'
     )
 
     y_arg = DeclareLaunchArgument(
-        'y', default_value='0.0',
+        'y', default_value='0.45',
         description='y coordinate of spawned robot'
     )
 
@@ -118,7 +126,6 @@ def generate_launch_description():
             "/scan@sensor_msgs/msg/LaserScan@gz.msgs.LaserScan",
             #"/scan/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
             #"/camera/depth_image@sensor_msgs/msg/Image@gz.msgs.Image",
-            "/camera/points@sensor_msgs/msg/PointCloud2@gz.msgs.PointCloudPacked",
         ],
         output="screen",
         parameters=[
@@ -168,6 +175,26 @@ def generate_launch_description():
         ]
     )
 
+    cartographer = Node(
+        package='cartographer_ros',
+        executable='cartographer_node',
+        name='cartographer_node',
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}],
+        arguments=[
+            '-configuration_directory', cartographer_config_dir,
+            '-configuration_basename', configuration_basename]
+    )
+    # Executing Cartographer
+    cartographer_grid = Node(
+        package='cartographer_ros',
+        executable='cartographer_occupancy_grid_node',
+        name='occupancy_grid_node',
+        output='screen',
+        parameters=[{'use_sim_time': LaunchConfiguration('use_sim_time')}],
+        arguments=['-resolution', resolution, '-publish_period_sec', publish_period_sec]
+    )
+
 
     launchDescriptionObject = LaunchDescription()
 
@@ -186,5 +213,7 @@ def generate_launch_description():
     launchDescriptionObject.add_action(gz_image_bridge_node)
     launchDescriptionObject.add_action(relay_camera_info_node)
     launchDescriptionObject.add_action(robot_state_publisher_node)
+    launchDescriptionObject.add_action(cartographer)
+    launchDescriptionObject.add_action(cartographer_grid)
 
     return launchDescriptionObject
